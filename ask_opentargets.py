@@ -20,7 +20,20 @@ prime_prompt = "query query {"
 
 # Custom input by the user
 # user_input = "Find the top 2 diseases associated with BRCA1"
-user_input ="What are the targets of vorinostat"#"What is the symbol of the gene ENSG00000169083" #"What are the targets of vorinostat"#"What are the top 3 diseases associated with BRCA1"#input("How can I help you today?\n")
+
+#Working inputs
+#user_input ="What are the targets of vorinostat"
+#user_input = "What is the symbol of the gene ENSG00000169083" 
+#user_input = "What are the top 3 diseases associated with BRCA1"
+#user_input = "Find drugs that are used for treating ulcerative colitis"
+#user_input = "What is the description of the disease cancer"
+#user_input = "Which diseases are associated with the genes targetted by fasudil?"
+
+#Not working inputs
+user_input = "Show all the diseases that have at least 5 pathways associated with Alzheimer"
+
+#user_input ="What are the targets of vorinostat"#"What is the symbol of the gene ENSG00000169083" #"What are the targets of vorinostat"#"What are the top 3 diseases associated with BRCA1"#input("How can I help you today?\n")
+
 prompt_user = prompt_template + "### " + user_input + "\n" + prime_prompt
 
 print("****")
@@ -44,14 +57,15 @@ response_text = response["choices"][0]["message"]["content"]
 
 query_string = prime_prompt + response_text
 
-# filename with current date and time
-query_file = "query_" + datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p") + ".txt"
+# # filename with current date and time
+# query_file = "query_" + datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p") + ".txt"
 
-# write query to file with current date and time
-with open(query_file, "w") as f:
-    f.write(f"# User input: {user_input}\n")
-    f.write(query_string)
-    print(f"\nCustom graphQL query was written to file: {query_file}")
+# # write query to file with current date and time
+# with open(query_file, "w") as f:
+#     f.write(f"# User input: {user_input}\n")
+#     f.write(query_string)
+#     print(f"\nCustom graphQL query was written to file: {query_file}")
+print(query_string)
 
 # Set base URL of GraphQL API endpoint
 base_url = "https://api.platform.opentargets.org/api/v4/graphql"

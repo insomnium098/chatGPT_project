@@ -165,21 +165,11 @@
 #   "Year drug was approved for the first time"
 #   yearOfFirstApproval: Int
 
-#   "Drug modality"
-#   drugType: String!
-
-#   "Alias for maximumClinicalTrialPhase == 4"
-#   isApproved: Boolean
-#   crossReferences: [DrugReferences!]
-
 #   "Maximum phase observed in clinical trial records and post-marketing package inserts"
 #   maximumClinicalTrialPhase: Float
 
 #   "Has drug been withdrawn from the market"
 #   hasBeenWithdrawn: Boolean!
-
-#   "Alert on life-threteaning drug side effects provided by FDA"
-#   blackBoxWarning: Boolean!
 
 #   "Drug description"
 #   description: String
@@ -189,12 +179,6 @@
 
 #   "Chembl IDs of molecules that descend from current molecule."
 #   childMolecules: [Drug!]!
-
-#   "Indications for which there is a phase IV clinical trial"
-#   approvedIndications: [String!]
-
-#   "Warnings present on drug as identified by ChEMBL."
-#   drugWarnings: [DrugWarning!]!
 
 #   "Return similar labels using a model Word2CVec trained with PubMed"
 #   similarEntities(
@@ -226,9 +210,6 @@
 
 #   "Mechanisms of action to produce intended pharmacological effects. Curated from scientific literature and post-marketing package inserts"
 #   mechanismsOfAction: MechanismsOfAction
-
-#   "Investigational and approved indications curated from clinical trial records and post-marketing package inserts"
-#   indications: Indications
 
 #   "Curated Clinical trial records and and post-marketing package inserts with a known mechanism of action"
 #   knownDrugs(
@@ -402,13 +383,6 @@
 #     goIds: [String!]!): [GeneOntologyTerm]!
 # }
 
-
-# type ReactomePathway {
-#   pathway: String!
-#   pathwayId: String!
-#   topLevelTerm: String!
-# }
-
 # type SearchResult {
 #   id: String!
 #   entity: String!
@@ -438,17 +412,6 @@
 #   "Total number or results given a entity filter"
 #   total: Long!
 # }
-
-
-# "Sequence Ontology Term"
-# type SequenceOntologyTerm {
-#   "Sequence Ontology ID"
-#   id: String!
-
-#   "Sequence Ontology Label"
-#   label: String!
-# }
-
 
 # "Target entity"
 # type Target {
@@ -535,18 +498,43 @@
 #     "Threshold similarity between 0 and 1"
 #     threshold: Float, size: Int): [Similarity!]!
 
-# type Tractability {
-#   label: String!
-#   modality: String!
-#   value: Boolean!
-# }
-
 #"Linked Target Entities"
 #type LinkedTargets {
 #  count: Int!
 #  "Target List"
 #  rows: [Target!]!
 #}
+
+"Evidence for a Target-Disease pair"
+type Evidence {
+  "Evidence identifier"
+  id: String!
+
+  "Evidence score"
+  score: Float!
+
+  "Target evidence"
+  target: Target!
+
+  "Disease evidence"
+  disease: Disease!
+
+  "list of central pub med publications ids"
+  pubMedCentralIds: [String!]
+  studyCases: Long
+  clinicalStatus: String
+  diseaseFromSource: String
+  diseaseFromSourceId: String
+  targetFromSourceId: String
+  targetModulation: String
+  studyId: String
+  pathways: [Pathway!]
+  biosamplesFromSource: [String!]
+  diseaseFromSourceMappedId: String
+}
+
+
+
 ### Here is an example prompt to generate a graphQL query: What are the top 5 diseases associated with gene APOE?
 #
 ### query query {
@@ -578,3 +566,29 @@
 #    approvedSymbol
 #  }
 #}
+
+### Here is an example prompt to generate a graphQL query: What is the description of the disease Alzheimer?
+#
+###query query {  disease(efoId: "MONDO_0004975") {
+#    description
+#  }
+#}
+
+### Here is an example prompt to generate a graphQL query: What are the pathways associated with the disease Alzheimer?
+#
+###query query {  disease(efoId: "MONDO_0004975") {
+    name,
+  	associatedTargets{
+      rows{
+        target{
+          pathways{
+            pathway
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
