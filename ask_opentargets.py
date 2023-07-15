@@ -11,16 +11,21 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Open Targets graphQL schema example
 # read from file
-with open("graphql_schema.txt", "r") as f:
+with open("graphql_schema_test_3.txt", "r") as f:
     prompt_template = f.read()
 
 # Prime the target query for completion
-prime_prompt = "query top_n_associated_diseases {\n  search(queryString:"
+#prime_prompt = "query top_n_associated_diseases {\n  search(queryString:"
+prime_prompt = "query query {"
 
 # Custom input by the user
 # user_input = "Find the top 2 diseases associated with BRCA1"
-user_input = "What are the top 3 diseases associated with BRCA1"#input("How can I help you today?\n")
+user_input ="What are the targets of vorinostat"#"What is the symbol of the gene ENSG00000169083" #"What are the targets of vorinostat"#"What are the top 3 diseases associated with BRCA1"#input("How can I help you today?\n")
 prompt_user = prompt_template + "### " + user_input + "\n" + prime_prompt
+
+print("****")
+print(prompt_user)
+print("****")
 
 response = openai.ChatCompletion.create(#openai.Completion.create(
     model="gpt-3.5-turbo",
@@ -61,10 +66,11 @@ except requests.exceptions.HTTPError as err:
 
 # Transform API response from JSON into Python dictionary and print in console
 api_response = json.loads(response.text)
-hits_list = api_response["data"]["search"]["hits"][0]
+print(api_response)
+# hits_list = api_response["data"]["search"]["hits"][0]
 
-print("\n\nQuerying Open Targets genetics database...\n\n")
+# print("\n\nQuerying Open Targets genetics database...\n\n")
 
-disease_list = extract_values(hits_list, "disease")
-for i, j in enumerate(disease_list):
-    print(f"{i+1}. {j['name']}")
+# disease_list = extract_values(hits_list, "disease")
+# for i, j in enumerate(disease_list):
+#     print(f"{i+1}. {j['name']}")
