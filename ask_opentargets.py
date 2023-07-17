@@ -53,39 +53,19 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 prompt_template = Path("graphql_schema_test_3.txt").read_text()
 
 # Prime the target query for completion
-# prime_prompt = "query top_n_associated_diseases {\n  search(queryString:"
 prime_prompt = "query query {"
 
-# Custom input by the user
-# user_input = "Find the top 2 diseases associated with BRCA1"
-
-# Working inputs
-# user_input ="What are the targets of vorinostat"
-# user_input = "What is the symbol of the gene ENSG00000169083"
-user_input = "What are the top 3 diseases associated with BRCA1"
-# user_input = "Find drugs that are used for treating ulcerative colitis"
-# user_input = "What is the description of the disease cancer"
-# user_input = "Which diseases are associated with the genes targetted by fasudil?"
-
-# Not working inputs
-# user_input = "Show all the diseases that have at least 5 pathways associated with Alzheimer"
-# user_input = "What are the main consequences of diabetes?"
-
-# user_input ="What are the targets of vorinostat"#"What is the symbol of the gene ENSG00000169083" #"What are the targets of vorinostat"#"What are the top 3 diseases associated with BRCA1"#input("How can I help you today?\n")
+user_input = input("How can I help you today?\n")
 
 prompt_user = prompt_template + "### " + user_input + "\n" + prime_prompt
 
 logger.debug(prompt_user)
 
-response = openai.ChatCompletion.create(  # openai.Completion.create(
+response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
-    # prompt=prompt_template + "### " + user_input + "\n" + prime_prompt,
     messages=[{"role": "user", "content": prompt_user}],
     temperature=0,
     max_tokens=250,
-    # top_p=1,
-    # frequency_penalty=0,
-    # presence_penalty=0,
     stop=["###"],
 )
 
@@ -122,10 +102,3 @@ if args.store_output:
     logger.info("Api response stored on file output.json")
 else:
     logger.info(api_response)
-# hits_list = api_response["data"]["search"]["hits"][0]
-
-# print("\n\nQuerying Open Targets genetics database...\n\n")
-
-# disease_list = extract_values(hits_list, "disease")
-# for i, j in enumerate(disease_list):
-#     print(f"{i+1}. {j['name']}")
